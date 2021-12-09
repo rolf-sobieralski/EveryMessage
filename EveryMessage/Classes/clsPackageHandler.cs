@@ -12,5 +12,10 @@ namespace EveryMessage.Classes
         {
 
         }
+
+        public EveryMessage.Models.mPackage CreatePackage()
+        {
+            return new Models.mPackage();
+        }
     }
 }

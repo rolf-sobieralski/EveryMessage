@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace EveryMessage.Classes
 {
-    class clsRequestHandler
+    public class clsRequestHandler
     {
+        public clsRequestHandler()
+        {
+
+        }
     }
 }

@@ -8,6 +8,26 @@ namespace EveryMessage.Classes
 {
     public class Enums
     {
+        public enum PackageType : int
+        {
+            Unknown = 0,
+            Status = 1,
+            Request = 2,
+            Response = 3
+        }
+
+        public enum MessageType : int
+        {
+            unknown = 0,
+            Login = 1,
+            Message = 2,
+            StatusChange = 3,
+            StatusRequest = 4,
+            InfoRequest = 5,
+            StatusResponse = 6,
+            InfoResponse = 7,
+            Logout = 8
+        }
         public enum PhoneNumberType : int
         {
             Unknown = 0,
@@ -41,7 +61,8 @@ namespace EveryMessage.Classes
             Status = 5,
             StatusRequest = 6,
             StatusResponse = 7,
-            Logout = 8
+            Logout = 8,
+            Resend = 9
         }
         public enum RequestCode : int
         {
