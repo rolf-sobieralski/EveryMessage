@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EveryMessageServer.Classes;
+using System;
 
 namespace EveryMessageServer
 {
@@ -6,7 +7,7 @@ namespace EveryMessageServer
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            ServerInstance Instance = new ServerInstance();
         }
     }
 }
