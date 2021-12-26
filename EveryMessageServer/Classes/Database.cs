@@ -21,7 +21,7 @@ namespace EveryMessageServer.Classes
         private string _Db = "";
         public Database()
         {
-                var SettingsList = ConfigurationManager.AppSettings;
+            var SettingsList = ConfigurationManager.AppSettings;
             _IPAddress = SettingsList["DatabaseIPAddress"];
             _Port = SettingsList["DatabasePort"];
             _Username = SettingsList["DatabaseUser"];
@@ -34,15 +34,15 @@ namespace EveryMessageServer.Classes
         {
             MySqlConnection Con = null;
             try
-            { 
-                Con = new MySqlConnection("Server = " + _IPAddress + "; Port = " + _Port + "; Database = " + _Db +" ; Uid = " + _Username + "; Pwd = " + _Pass);
+            {
+                Con = new MySqlConnection("Server = " + _IPAddress + "; Port = " + _Port + "; Database = " + _Db + "; Uid = " + _Username + "; Pwd = " + _Pass);
                 Con.Open();
                 if (Con.State != System.Data.ConnectionState.Open)
                 {
                     Exception ex = new Exception("Fehler beim Versuch eine Datenbankverbindung her zu stellen");
                     Ex = ex;
                 }
-            }catch(Exception ex)
+            } catch (Exception ex)
             {
                 Ex = ex;
             }
@@ -51,13 +51,18 @@ namespace EveryMessageServer.Classes
 
         public T GetInstanceFromReader<T>(MySqlDataReader reader)
         {
-
-            return (T)typeof(T).GetConstructor(new Type[] { typeof(T) }).Invoke(new object[] { reader },null);
+            Type Typ = typeof(T);
+            Type[] typlist = new Type[] { Typ };
+            ParameterModifier pm = new ParameterModifier(1);
+            ConstructorInfo info = Typ.GetConstructor(BindingFlags.CreateInstance, null, typlist, new ParameterModifier[] { });
+            T returnElement = (T)info.Invoke(new object[] { reader });
+            return returnElement;
         }
+
         public EveryMessageServer.Models.User GetUser(string user, string hash, ref Exception ex)
         {
             MySqlConnection Con = GetConnection(ref ex);
-            Models.User ReturnUser = null;
+            List<Models.User> ReturnUser = null;
             try
             {
                 MySqlCommand Command = new MySqlCommand();
@@ -65,9 +70,9 @@ namespace EveryMessageServer.Classes
                 sb.AppendLine("SELECT");
                 sb.AppendLine("     Id,");
                 sb.AppendLine("     Username,");
-                sb.AppendLine("     Password,");
+                sb.AppendLine("     Password as Pass,");
                 sb.AppendLine("     SessionHash,");
-                sb.AppendLine("     LastIPEndPoint,");
+                sb.AppendLine("     LastIPEndPoint as LastIP,");
                 sb.AppendLine("     LastHeartBeat,");
                 sb.AppendLine("     Status");
                 sb.AppendLine("FROM");
@@ -83,7 +88,9 @@ namespace EveryMessageServer.Classes
                 MySqlDataReader reader = Command.ExecuteReader();
                 if (reader.HasRows)
                 {
-                    ReturnUser = GetInstanceFromReader<Models.User>(reader);
+                    DataTable dt = new DataTable();
+                    dt.Load(reader);
+                    ReturnUser = ToList<Models.User>(dt);
                 }
             }catch(Exception UserException)
             {
@@ -92,9 +99,43 @@ namespace EveryMessageServer.Classes
             }
             if(ReturnUser != null)
             {
-                return ReturnUser;
+                return ReturnUser.First();
             }
             return null;
+        }
+
+        public List<T> ToList<T>(DataTable table) where T : class, new()
+        {
+            try
+            {
+                List<T> list = new List<T>();
+
+                foreach (var row in table.AsEnumerable())
+                {
+                    T obj = new T();
+
+                    foreach (var prop in obj.GetType().GetProperties())
+                    {
+                        try
+                        {
+                            PropertyInfo propertyInfo = obj.GetType().GetProperty(prop.Name);
+                            propertyInfo.SetValue(obj, Convert.ChangeType(row[prop.Name], propertyInfo.PropertyType), null);
+                        }
+                        catch
+                        {
+                            continue;
+                        }
+                    }
+
+                    list.Add(obj);
+                }
+
+                return list;
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

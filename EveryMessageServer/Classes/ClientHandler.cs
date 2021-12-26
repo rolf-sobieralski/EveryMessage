@@ -14,9 +14,7 @@ namespace EveryMessageServer.Classes
         private Database db;
         public ClientHandler()
         {
-            Exception ex = new Exception();
             db = new Database();
-            db.GetUser("freekster", "b442fba80e8aa930507dfc15899149bd05172b7791629be87706144b6d119630", ref ex);
         }
         public void HandleClient(TcpClient Client)
         {

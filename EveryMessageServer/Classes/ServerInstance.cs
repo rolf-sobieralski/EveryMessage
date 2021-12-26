@@ -21,7 +21,7 @@ namespace EveryMessageServer.Classes
             Port = port;
             db = new Database();
             Exception ex = new Exception();
-            db.GetUser("freekster", "b442fba80e8aa930507dfc15899149bd05172b7791629be87706144b6d119630", ref ex);
+            db.GetUser("freekster", "b792d32312bc1cfab7cc1e7979453075dde0101428b0c51c5733de04dc7ec000", ref ex);
             if (address == null)
             {
                 ServerIP = GetLocalIPAddress();

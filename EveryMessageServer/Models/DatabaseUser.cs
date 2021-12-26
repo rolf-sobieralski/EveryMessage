@@ -31,11 +31,18 @@ namespace EveryMessageServer.Models
     {
         public int Id { get; set; }
         public string Username { get; set; }
-        public string pass { get; set; }
-        public string LastIp { get; set; }
+        public string Pass { get; set; }
+        public string LastIP { get; set; }
         public string SessionHash { get; set; }
         public DateTime LastHeartBeat { get; set; }
-        public EveryMessage.Classes.Enums.Status UserStatus { get; set; }
+        public int Status { get; set; }
+        public EveryMessage.Classes.Enums.Status UserStatus
+        {
+            get
+            {
+                return (EveryMessage.Classes.Enums.Status)Enum.Parse(typeof(EveryMessage.Classes.Enums.Status), Status.ToString());
+            }
+        }
         public User(object[] objlist)
         {
             MySqlDataReader dr = (MySqlDataReader)objlist[0];
@@ -46,6 +53,10 @@ namespace EveryMessageServer.Models
             if (!dr.IsDBNull(1)){
                 Username = dr.GetString(1);
             }
+        }
+        public User()
+        {
+
         }
     }
 
