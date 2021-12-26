@@ -49,14 +49,71 @@ namespace EveryMessageServer.Classes
             return Con;
         }
 
-        public T GetInstanceFromReader<T>(MySqlDataReader reader)
+        public bool DelUser(string Username, string hash, string SessionHash, Exception ex)
         {
-            Type Typ = typeof(T);
-            Type[] typlist = new Type[] { Typ };
-            ParameterModifier pm = new ParameterModifier(1);
-            ConstructorInfo info = Typ.GetConstructor(BindingFlags.CreateInstance, null, typlist, new ParameterModifier[] { });
-            T returnElement = (T)info.Invoke(new object[] { reader });
-            return returnElement;
+            MySqlConnection Con = GetConnection(ref ex);
+            bool check = false;
+            try
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine("DELETE FROM");
+                sb.AppendLine("     Users");
+                sb.AppendLine(" WHERE");
+                sb.AppendLine("     Username = @Username");
+                sb.AppendLine(" AND");
+                sb.AppendLine("     Password = @Hash");
+                sb.AppendLine(" AND");
+                sb.AppendLine("     SessionHash = @SessionHash");
+                MySqlCommand Command = new MySqlCommand();
+                Command.Connection = Con;
+                Command.CommandText = sb.ToString();
+                Command.Parameters.AddWithValue("@Username", Username);
+                Command.Parameters.AddWithValue("@Hash", hash);
+                Command.Parameters.AddWithValue("@SessionHash", SessionHash);
+                int Check = Command.ExecuteNonQuery();
+                if(Check > 0)
+                {
+                    check = true;
+                }
+            }catch(Exception Ex)
+            {
+                ex = Ex;
+            }
+            return check;
+        }
+
+        public void AddUser(string Username, string Hash, string lastIPEndPoint, ref Exception ex)
+        {
+            MySqlConnection Con = GetConnection(ref ex);
+            try
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine("INSERT INTO");
+                sb.AppendLine("     Users(");
+                sb.AppendLine("         Username,");
+                sb.AppendLine("         Password,");
+                sb.AppendLine("         SessionHash,");
+                sb.AppendLine("         LastIPEndPoint,");
+                sb.AppendLine("         Status");
+                sb.AppendLine("             )");
+                sb.AppendLine("     VALUES(");
+                sb.AppendLine("             @Username,");
+                sb.AppendLine("             @Hash,");
+                sb.AppendLine("             '',");
+                sb.AppendLine("             @EndPoint,");
+                sb.AppendLine("             0");
+                sb.AppendLine("             )");
+                MySqlCommand Command = new MySqlCommand();
+                Command.CommandText = sb.ToString();
+                Command.Parameters.AddWithValue("@Username", Username);
+                Command.Parameters.AddWithValue("@Hash", Hash);
+                Command.Parameters.AddWithValue("@EndPoint", lastIPEndPoint);
+                Command.Connection = Con;
+                Command.ExecuteNonQuery();
+            }catch(Exception Ex)
+            {
+                ex = Ex;
+            }
         }
 
         public EveryMessageServer.Models.User GetUser(string user, string hash, ref Exception ex)

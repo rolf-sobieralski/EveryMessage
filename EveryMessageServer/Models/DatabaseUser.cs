@@ -34,24 +34,13 @@ namespace EveryMessageServer.Models
         public string Pass { get; set; }
         public string LastIP { get; set; }
         public string SessionHash { get; set; }
-        public DateTime LastHeartBeat { get; set; }
+        public DateTime? LastHeartBeat { get; set; }
         public int Status { get; set; }
-        public EveryMessage.Classes.Enums.Status UserStatus
+        public EveryMessageBase.Classes.Enums.Status UserStatus
         {
             get
             {
-                return (EveryMessage.Classes.Enums.Status)Enum.Parse(typeof(EveryMessage.Classes.Enums.Status), Status.ToString());
-            }
-        }
-        public User(object[] objlist)
-        {
-            MySqlDataReader dr = (MySqlDataReader)objlist[0];
-            if(!dr.IsDBNull(0))
-            {
-                Id = dr.GetInt32(0);
-            }
-            if (!dr.IsDBNull(1)){
-                Username = dr.GetString(1);
+                return (EveryMessageBase.Classes.Enums.Status)Enum.Parse(typeof(EveryMessageBase.Classes.Enums.Status), Status.ToString());
             }
         }
         public User()

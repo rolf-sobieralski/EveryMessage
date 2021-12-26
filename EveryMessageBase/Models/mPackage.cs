@@ -4,14 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EveryMessage.Models
+namespace EveryMessageBase.Models
 {
     public class mPackage
     {
-        int PackageType { get; set; }
-        int MessageType { get; set; }
-        int ContentType { get; set; }
-        long ContentLength { get; set; }
-        byte[] Content { get; set; }
+        public Classes.Enums.PackageType PackageType { get; set; }
+        public Classes.Enums.MessageType MessageType { get; set; }
+        public Classes.Enums.ContentType ContentType { get; set; }
+        public long ContentLength { get; set; }
+        public byte[] Content { get; set; }
+        public Interfaces.IPackage Package { get; set; }
     }
 }

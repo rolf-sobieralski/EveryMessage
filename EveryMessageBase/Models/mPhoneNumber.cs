@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EveryMessage.Models
+namespace EveryMessageBase.Models
 {
     public class mPhoneNumber
     {

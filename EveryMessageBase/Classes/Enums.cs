@@ -4,16 +4,26 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EveryMessage.Classes
+namespace EveryMessageBase.Classes
 {
     public class Enums
     {
+        public enum ContentType : int
+        {
+            Unknown = 0,
+            PlainText = 1,
+            HTMLText = 2,
+            UserInfo = 3,
+            UserUpdate = 4,
+            HeartBeat = 5
+        }
         public enum PackageType : int
         {
             Unknown = 0,
             Status = 1,
             Request = 2,
-            Response = 3
+            Response = 3,
+            HeartBeat = 4
         }
 
         public enum MessageType : int
